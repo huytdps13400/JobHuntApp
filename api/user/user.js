@@ -3,7 +3,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { NetWorkService } from "../../apiServer";
 
 export const postLogin = createAsyncThunk("user/postLogin", async (fields) => {
-  const response = await NetWorkService.Post({
+  const response = await NetWorkService.PostFormData({
     url: postLoginUrl,
     body: fields,
   });

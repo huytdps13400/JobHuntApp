@@ -70,6 +70,12 @@ async function Put(params) {
 async function Delete(params) {
   return Request(handleParameter(params, "DELETE"));
 }
+async function PostFormData(param) {
+  const headers = {
+    "Content-Type": "multipart/form-data",
+  };
+  return Request(handleParameter({ ...params, headers }, "POST"));
+}
 
 export const NetWorkService = {
   Get,
@@ -78,4 +84,5 @@ export const NetWorkService = {
   Delete,
   Request,
   Patch,
+  PostFormData,
 };
