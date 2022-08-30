@@ -18,9 +18,9 @@ export const handleParameter = (props, method) => {
 
 // base
 function Request(config) {
-  console.log("endpoint: nè", `${config.baseUrl}${config.url}`);
+  console.log("endpoint: nè", `${"https://10.0.2.2:44135/"}${config.url}`);
   const defaultConfig = {
-    baseURL: "https://localhost:44315/",
+    baseURL: "http://10.0.2.2:44135/",
     timeout: 30000,
     headers: {
       "Content-Type": "application/json",
@@ -34,11 +34,12 @@ function Request(config) {
       })
       .catch((error) => {
         let err;
-        if (error && error.response) {
-          err = error.response;
-        } else {
-          err = "Network error";
-        }
+        // if (error && error.response) {
+        //   err = error.response;
+        // } else {
+        //   err = "Network error";
+        // }
+        console.log({ err: error.response });
 
         rj(err);
       });
@@ -74,7 +75,12 @@ async function PostFormData(param) {
   const headers = {
     "Content-Type": "multipart/form-data",
   };
-  return Request(handleParameter({ ...params, headers }, "POST"));
+  const transformRequest = (data, headers) => {
+    return formData;
+  };
+  return Request(
+    handleParameter({ ...param, headers, transformRequest }, "POST")
+  );
 }
 
 export const NetWorkService = {

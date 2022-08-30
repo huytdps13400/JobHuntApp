@@ -14,6 +14,9 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Button from "../../../components/Button";
 import { postLogin } from "../../../api/user/user";
 // import TextInput from "../../../components/TextInput";
+import Constants from "expo-constants";
+
+const { manifest } = Constants;
 
 const width = Dimensions.get("window").width;
 
@@ -21,8 +24,8 @@ const LoginScreen = () => {
   const inset = useSafeAreaInsets();
   const dispatch = useDispatch();
   const refEmail = useRef(null);
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("HoangTVDE140186@fpt.edu.vn");
+  const [password, setPassword] = useState("HoangTVDE140186");
 
   return (
     <View
@@ -50,6 +53,9 @@ const LoginScreen = () => {
 
         <Button
           onPress={async () => {
+            const uri = `http://${manifest.debuggerHost
+              .split(":")
+              .shift()}:4000`;
             const formData = new FormData();
             formData.append("Email", email);
             formData.append("Password", password);
@@ -57,11 +63,14 @@ const LoginScreen = () => {
             formData.append("RememberMe", false);
 
             formData.append("type", "candidatelogin");
-
-            console.log("kaka", refEmail.current);
+            console.log({ uri });
             await dispatch(
               postLogin({
-                formData,
+                data: formData,
+                // Email: email,
+                // Password: password,
+                // RememberMe: false,
+                // type: "candidatelogin",
               })
             ).unwrap();
             dispatch(setLoginStatus(true));
