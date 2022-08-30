@@ -56,7 +56,7 @@ const LoginScreen = () => {
 
             formData.append("RememberMe", false);
 
-            formData.append("type", candidatelogin);
+            formData.append("type", "candidatelogin");
 
             console.log("kaka", refEmail.current);
             await dispatch(
