@@ -1,1 +1,1 @@
-export const postLoginUrl = "";
+export const postLoginUrl = "Account/Login";

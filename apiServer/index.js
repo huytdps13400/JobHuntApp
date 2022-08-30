@@ -20,7 +20,7 @@ export const handleParameter = (props, method) => {
 function Request(config) {
   console.log("endpoint: nè", `${config.baseUrl}${config.url}`);
   const defaultConfig = {
-    baseURL: config.baseUrl,
+    baseURL: "https://localhost:44315/",
     timeout: 30000,
     headers: {
       "Content-Type": "application/json",
