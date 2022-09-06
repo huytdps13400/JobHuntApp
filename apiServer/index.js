@@ -18,9 +18,9 @@ export const handleParameter = (props, method) => {
 
 // base
 function Request(config) {
-  console.log("endpoint: nè", `${"https://10.0.2.2:44135/"}${config.url}`);
+  console.log("endpoint: nè", `${"http://localhost/8080/"}${config.url}`);
   const defaultConfig = {
-    baseURL: "http://10.0.2.2:44135/",
+    baseURL: "https://17fd-1-52-231-193.ngrok.io/",
     timeout: 30000,
     headers: {
       "Content-Type": "application/json",

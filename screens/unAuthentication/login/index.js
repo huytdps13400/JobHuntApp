@@ -24,8 +24,8 @@ const LoginScreen = () => {
   const inset = useSafeAreaInsets();
   const dispatch = useDispatch();
   const refEmail = useRef(null);
-  const [email, setEmail] = useState("HoangTVDE140186@fpt.edu.vn");
-  const [password, setPassword] = useState("HoangTVDE140186");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   return (
     <View
@@ -53,24 +53,12 @@ const LoginScreen = () => {
 
         <Button
           onPress={async () => {
-            const uri = `http://${manifest.debuggerHost
-              .split(":")
-              .shift()}:4000`;
-            const formData = new FormData();
-            formData.append("Email", email);
-            formData.append("Password", password);
-
-            formData.append("RememberMe", false);
-
-            formData.append("type", "candidatelogin");
-            console.log({ uri });
             await dispatch(
               postLogin({
-                data: formData,
-                // Email: email,
-                // Password: password,
-                // RememberMe: false,
-                // type: "candidatelogin",
+                Email: email,
+                Password: password,
+                RememberMe: false,
+                type: "candidatelogin",
               })
             ).unwrap();
             dispatch(setLoginStatus(true));
