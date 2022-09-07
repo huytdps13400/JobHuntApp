@@ -6,24 +6,19 @@ import {
 } from "react-native";
 import React, { forwardRef, useImperativeHandle, useState } from "react";
 
-const TextInput = ({ onChangeText }, ref) => {
+const TextInput = ({}, ref, rest) => {
   const [value, setValue] = useState("2222");
 
   const getValue = () => {
     return value;
   };
-  console.log({ value: getValue() });
 
-  useImperativeHandle(
-    ref,
-    () => {
-      getValue();
-    },
-    []
-  );
+  useImperativeHandle(ref, () => {
+    getValue();
+  });
   return (
     <View style={styles.container}>
-      <BaseTextInput onChangeText={(text) => setValue(text)} />
+      <BaseTextInput onChangeText={(text) => setValue(text)} {...rest} />
     </View>
   );
 };

@@ -16,14 +16,11 @@ import { postLogin } from "../../../api/user/user";
 // import TextInput from "../../../components/TextInput";
 import Constants from "expo-constants";
 
-const { manifest } = Constants;
-
 const width = Dimensions.get("window").width;
 
 const LoginScreen = () => {
   const inset = useSafeAreaInsets();
   const dispatch = useDispatch();
-  const refEmail = useRef(null);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -53,14 +50,14 @@ const LoginScreen = () => {
 
         <Button
           onPress={async () => {
-            await dispatch(
-              postLogin({
-                Email: email,
-                Password: password,
-                RememberMe: false,
-                type: "candidatelogin",
-              })
-            ).unwrap();
+            // await dispatch(
+            //   postLogin({
+            //     Email: email,
+            //     Password: password,
+            //     RememberMe: false,
+            //     type: "candidatelogin",
+            //   })
+            // ).unwrap();
             dispatch(setLoginStatus(true));
           }}
           title="Đăng Nhập"
