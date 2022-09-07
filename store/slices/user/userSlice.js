@@ -1,7 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { getSearchJobByKeyWord } from "../../../api/user/user";
 
 const initialAppState = {
   isLoggedIn: false,
+  listJob: [],
+  loadingListJob: false,
 };
 
 const userSlice = createSlice({
@@ -14,6 +17,10 @@ const userSlice = createSlice({
     },
   },
   extraReducers: (builder) => {
+    builder.addCase(getSearchJobByKeyWord.fulfilled, (state, action) => {
+      state.listJob = action.payload || [];
+      state.loadingListJob = false;
+    });
     // App initial
   },
 });

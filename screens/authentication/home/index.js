@@ -7,18 +7,43 @@ import {
   Image,
   TouchableOpacity,
 } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { FontFamily, Icon } from "../../../assets";
+import {
+  StatusBar,
+  setStatusBarBackgroundColor,
+  setStatusBarStyle,
+} from "expo-status-bar";
+import { useIsFocused } from "@react-navigation/native";
+import { useCallback } from "react";
+import { debounce } from "lodash";
+import { useDispatch, useSelector } from "react-redux";
+import { getSearchJobByKeyWord } from "../../../api/user/user";
 
 const HomeScreen = () => {
   const inset = useSafeAreaInsets();
+  const isFocused = useIsFocused();
+  const dispatch = useDispatch();
+  const { listJob } = useSelector((state) => state.user);
+  useEffect(() => {
+    if (!isFocused) {
+      setStatusBarBackgroundColor("white", true);
+      setStatusBarStyle("dark");
+    }
+  }, [isFocused]);
+  const onHandleSearch = useCallback((text) => {
+    debounce(() => {
+      dispatch(getSearchJobByKeyWord({ keyWord: text })).unwrap();
+    }, 500);
+  }, []);
   const renderHeader = () => {
     return (
       <View style={styles.boxHeader}>
         <TextInput
           placeholder="Enter KeyWord Title"
           style={styles.textInputStyle}
+          onChangeText={(text) => onHandleSearch(text)}
         />
         <TouchableOpacity>
           <Image
@@ -32,7 +57,7 @@ const HomeScreen = () => {
   };
   const renderItem = () => {
     return (
-      <View style={styles.itemContainer}>
+      <TouchableOpacity style={styles.itemContainer}>
         <Image
           style={{ width: 56, height: 56, borderRadius: 4 }}
           source={{
@@ -135,17 +160,28 @@ const HomeScreen = () => {
             </Text>
           </View>
         </View>
-      </View>
+      </TouchableOpacity>
     );
+  };
+
+  const renderFooter = () => {
+    return <View style={{ width: 10, height: 10 }} />;
   };
   return (
     <View style={[styles.container, { paddingTop: inset.top }]}>
+      <StatusBar
+        backgroundColor={isFocused ? "#1D438A" : "white"}
+        translucent={true}
+        animated
+        style="light"
+      />
       <FlatList
         ListHeaderComponent={renderHeader}
-        data={[1, 2, 3, 4, 5]}
+        data={listJob || []}
         renderItem={renderItem}
-        contentContainerStyle={{ flex: 1 }}
-        style={{ backgroundColor: "white", flex: 1, width: "100%" }}
+        style={{ backgroundColor: "white" }}
+        keyExtractor={(item, index) => index.toString()}
+        ListFooterComponent={renderFooter}
       />
     </View>
   );
@@ -169,6 +205,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     borderRadius: 4,
     fontFamily: FontFamily.SoDoSansRegular,
+    paddingVertical: 8,
   },
   iconSearch: {
     width: 24,
