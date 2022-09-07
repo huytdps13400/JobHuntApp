@@ -7,6 +7,7 @@ import tabNavigation from "./tabNavigation";
 import useCachedResources from "../hooks/useCachedResources";
 import LoginScreen from "../screens/unAuthentication/login";
 import { useSelector } from "react-redux";
+import JobDetail from "../screens/authentication/JobDetail";
 
 const Stack = createNativeStackNavigator();
 
@@ -15,11 +16,18 @@ function RootNavigator() {
   return (
     <Stack.Navigator>
       {isLoggedIn ? (
-        <Stack.Screen
-          name={routeNames.rootTabNavigation}
-          component={tabNavigation}
-          options={{ headerShown: false }}
-        />
+        <>
+          <Stack.Screen
+            name={routeNames.rootTabNavigation}
+            component={tabNavigation}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name={routeNames.jobDetailScreen}
+            component={JobDetail}
+            options={{ headerShown: false }}
+          />
+        </>
       ) : (
         <Stack.Screen
           name={routeNames.loginScreen}

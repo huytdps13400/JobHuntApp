@@ -9,7 +9,7 @@
     "splash": {
       "image": "./assets/logoApp.png",
       "resizeMode": "contain",
-      "backgroundColor": "#00b4d8"
+      "backgroundColor": "#1D438A"
     },
     "updates": {
       "fallbackToCacheTimeout": 0

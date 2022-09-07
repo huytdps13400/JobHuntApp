@@ -3,6 +3,9 @@ export const Icon = {
   placeholder: require("./placeholder.png"),
   money: require("./money.png"),
   calendar: require("./calendar.png"),
+  profile: require("./profile.png"),
+  jobSearch: require("./jobSearch.png"),
+  leftarrow: require("./leftarrow.png"),
 };
 
 export const FontFamily = {
