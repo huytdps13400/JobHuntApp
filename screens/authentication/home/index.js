@@ -17,7 +17,11 @@ import { getSearchJobByKeyWord } from "../../../api/user/user";
 import { baseURL } from "../../../apiServer";
 import { FontFamily, Icon } from "../../../assets";
 import { routeNames } from "../../../navigation/routeNames";
-import { setKeyWord } from "../../../store/slices/user/userSlice";
+import {
+  endLoading,
+  setKeyWord,
+  startLoading,
+} from "../../../store/slices/user/userSlice";
 
 const HomeScreen = () => {
   const inset = useSafeAreaInsets();
@@ -29,16 +33,19 @@ const HomeScreen = () => {
   const [keyword, setKeyword] = useState(KeywordJob);
 
   const onHandleSearch = async (text) => {
+    dispatch(startLoading());
+
     await dispatch(getSearchJobByKeyWord({ keyWord: text })).unwrap();
+    dispatch(endLoading());
   };
 
   useEffect(() => {
-    onHandleSearch('')
+    onHandleSearch("");
   }, []);
-  console.log('kaka',)
+  console.log("kaka");
   useEffect(() => {
-    setKeyword(KeywordJob)
-  }, [KeywordJob])
+    setKeyword(KeywordJob);
+  }, [KeywordJob]);
   const renderHeader = useMemo(() => {
     return (
       <>
@@ -46,17 +53,18 @@ const HomeScreen = () => {
           <TextInput
             placeholder="Nhập từ khoá tìm kiếm..."
             style={styles.textInputStyle}
-            onChangeText={(text) => { setKeyword(text); dispatch(setKeyWord(text)) }}
-            value={KeywordJob || ''}
-
+            onChangeText={(text) => {
+              setKeyword(text);
+              dispatch(setKeyWord(text));
+            }}
+            value={KeywordJob || ""}
           />
           <TouchableOpacity
             onPress={() => {
               setTimeout(() => {
                 onHandleSearch(KeywordJob);
-
-              }, 300)
-              console.log({ keyword })
+              }, 300);
+              console.log({ keyword });
             }}
           >
             <Image
@@ -70,13 +78,13 @@ const HomeScreen = () => {
     );
   }, [setKeyword, keyword]);
   const renderItem = ({ item, index }) => {
-    const SalaryDTO = get(item, 'SalaryDTO', {});
-    const RJTitle = get(item, 'RJTitle', '');
-    const RJNameContact = get(item, 'RJNameContact', '');
-    const RJ_WorkPlace = get(item, 'RJ_WorkPlace', '');
-    const RJExpirationDate = get(item, 'RJExpirationDate', '');
-    const RecruitDTO = get(item, 'RecruitDTO', {});
-    const RILogo = get(RecruitDTO, 'RILogo', '')
+    const SalaryDTO = get(item, "SalaryDTO", {});
+    const RJTitle = get(item, "RJTitle", "");
+    const RJNameContact = get(item, "RJNameContact", "");
+    const RJ_WorkPlace = get(item, "RJ_WorkPlace", "");
+    const RJExpirationDate = get(item, "RJExpirationDate", "");
+    const RecruitDTO = get(item, "RecruitDTO", {});
+    const RILogo = get(RecruitDTO, "RILogo", "");
 
     return (
       <TouchableOpacity
@@ -156,7 +164,7 @@ const HomeScreen = () => {
                 flex: 1,
               }}
             >
-              {get(SalaryDTO, 'SShow', '')}
+              {get(SalaryDTO, "SShow", "")}
             </Text>
           </View>
           <View
@@ -181,7 +189,7 @@ const HomeScreen = () => {
                 flex: 1,
               }}
             >
-              Hết hạn:{moment(RJExpirationDate).format('DD/MM/YYYY')}
+              Hết hạn:{moment(RJExpirationDate).format("DD/MM/YYYY")}
             </Text>
           </View>
         </View>
