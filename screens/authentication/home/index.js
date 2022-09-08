@@ -1,6 +1,5 @@
 import { useIsFocused, useNavigation } from "@react-navigation/native";
-import { debounce } from "lodash";
-import React, { useCallback } from "react";
+import React, { useCallback, useState } from "react";
 import {
   FlatList,
   Image,
@@ -11,18 +10,9 @@ import {
   View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { FontFamily, Icon } from "../../../assets";
-import {
-  StatusBar,
-  setStatusBarBackgroundColor,
-  setStatusBarStyle,
-} from "expo-status-bar";
-import { useIsFocused } from "@react-navigation/native";
-import { useCallback } from "react";
-import { debounce, get } from "lodash";
 import { useDispatch, useSelector } from "react-redux";
 import { getSearchJobByKeyWord } from "../../../api/user/user";
-import { useState } from "react";
+import { FontFamily, Icon } from "../../../assets";
 
 const HomeScreen = () => {
   const inset = useSafeAreaInsets();
@@ -31,12 +21,7 @@ const HomeScreen = () => {
   const navigation = useNavigation();
   const { listJob } = useSelector((state) => state.user);
   const [keyword, setKeyword] = useState("");
-  useEffect(() => {
-    if (!isFocused) {
-      setStatusBarBackgroundColor("white", true);
-      setStatusBarStyle("dark");
-    }
-  }, [isFocused]);
+
   const onHandleSearch = async (text) => {
     await dispatch(getSearchJobByKeyWord({ keyWord: text })).unwrap();
   };
@@ -215,7 +200,7 @@ const HomeScreen = () => {
       <FlatList
         contentContainerStyle={{ flexGrow: 1 }}
         ListHeaderComponent={renderHeader}
-        data={[1, 2, 4, 5]}
+        data={listJob || []}
         renderItem={renderItem}
         style={{ backgroundColor: "white" }}
         keyExtractor={(item, index) => index.toString()}
