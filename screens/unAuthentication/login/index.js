@@ -50,14 +50,14 @@ const LoginScreen = () => {
 
         <Button
           onPress={async () => {
-            // await dispatch(
-            //   postLogin({
-            //     Email: email,
-            //     Password: password,
-            //     RememberMe: false,
-            //     type: "candidatelogin",
-            //   })
-            // ).unwrap();
+            await dispatch(
+              postLogin({
+                Email: email,
+                Password: password,
+                RememberMe: false,
+                type: "candidatelogin",
+              })
+            ).unwrap();
             dispatch(setLoginStatus(true));
           }}
           title="Đăng Nhập"

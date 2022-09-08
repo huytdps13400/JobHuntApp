@@ -17,35 +17,41 @@ import {
 } from "expo-status-bar";
 import { useIsFocused } from "@react-navigation/native";
 import { useCallback } from "react";
-import { debounce } from "lodash";
+import { debounce, get } from "lodash";
 import { useDispatch, useSelector } from "react-redux";
 import { getSearchJobByKeyWord } from "../../../api/user/user";
+import { useState } from "react";
 
 const HomeScreen = () => {
   const inset = useSafeAreaInsets();
   const isFocused = useIsFocused();
   const dispatch = useDispatch();
   const { listJob } = useSelector((state) => state.user);
+  const [keyword, setKeyword] = useState('')
   useEffect(() => {
     if (!isFocused) {
       setStatusBarBackgroundColor("white", true);
       setStatusBarStyle("dark");
     }
   }, [isFocused]);
-  const onHandleSearch = useCallback((text) => {
-    debounce(() => {
-      dispatch(getSearchJobByKeyWord({ keyWord: text })).unwrap();
-    }, 500);
-  }, []);
-  const renderHeader = () => {
+  const onHandleSearch = async (text) => {
+
+    await dispatch(getSearchJobByKeyWord({ keyWord: text })).unwrap();
+
+  };
+  const renderHeader = useCallback(() => {
     return (
       <View style={styles.boxHeader}>
         <TextInput
           placeholder="Enter KeyWord Title"
           style={styles.textInputStyle}
-          onChangeText={(text) => onHandleSearch(text)}
+          onChangeText={(text) => {
+            setKeyword(text);
+          }}
         />
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => {
+          onHandleSearch(keyword);
+        }}>
           <Image
             source={Icon.search}
             style={styles.iconSearch}
@@ -54,8 +60,8 @@ const HomeScreen = () => {
         </TouchableOpacity>
       </View>
     );
-  };
-  const renderItem = () => {
+  }, []);
+  const renderItem = (item, index) => {
     return (
       <TouchableOpacity style={styles.itemContainer}>
         <Image
@@ -131,7 +137,7 @@ const HomeScreen = () => {
                 flex: 1,
               }}
             >
-              Trên 25 triệu
+              {/* {get(item,)} */}
             </Text>
           </View>
           <View
