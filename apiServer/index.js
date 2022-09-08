@@ -1,6 +1,8 @@
 import { StyleSheet } from "react-native";
 
 import Axios from "axios";
+import { useDispatch } from "react-redux";
+import { endLoading } from "../store/slices/user/userSlice";
 
 const AxiosInstance = Axios.create({});
 
@@ -15,12 +17,12 @@ export const handleParameter = (props, method) => {
     baseUrl,
   };
 };
-export const baseURL = 'https://36ed-1-52-231-193.ngrok.io';
+export const baseURL = "https://36ed-1-52-231-193.ngrok.io";
 // base
 function Request(config) {
   console.log("endpoint: nè", `${"http://localhost/8080/"}${config.url}`);
   const defaultConfig = {
-    baseURL: baseURL + '/',
+    baseURL: baseURL + "/",
     timeout: 30000,
     headers: {
       "Content-Type": "application/json",
@@ -28,6 +30,7 @@ function Request(config) {
   };
 
   return new Promise((rs, rj) => {
+    const dispatch = useDispatch();
     AxiosInstance.request(StyleSheet.flatten([defaultConfig, config]))
       .then((res) => {
         return rs(res.data);
@@ -40,6 +43,7 @@ function Request(config) {
         //   err = "Network error";
         // }
         console.log({ err: error.response });
+        dispatch(endLoading());
 
         rj(err);
       });

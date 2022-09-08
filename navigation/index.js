@@ -8,6 +8,7 @@ import useCachedResources from "../hooks/useCachedResources";
 import LoginScreen from "../screens/unAuthentication/login";
 import { useSelector } from "react-redux";
 import JobDetail from "../screens/authentication/JobDetail";
+import Loader from "../components/Loading";
 
 const Stack = createNativeStackNavigator();
 
@@ -40,7 +41,7 @@ function RootNavigator() {
 }
 const Navigation = () => {
   const isLoadingComplete = useCachedResources();
-
+  const { loadingApp } = useSelector((state) => state.user);
   const renderView = () => {
     return (
       <Animated.View style={{ flex: 1 }}>
@@ -48,6 +49,7 @@ const Navigation = () => {
           <>
             {/* Root Navigation */}
             <RootNavigator />
+            {loadingApp && <Loader />}
           </>
         )}
         {/* Snackbar */}

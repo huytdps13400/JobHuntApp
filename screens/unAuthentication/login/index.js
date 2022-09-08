@@ -10,7 +10,11 @@ import {
 } from "react-native";
 import React, { useRef, useState } from "react";
 import { useDispatch } from "react-redux";
-import { setLoginStatus } from "../../../store/slices/user/userSlice";
+import {
+  endLoading,
+  setLoginStatus,
+  startLoading,
+} from "../../../store/slices/user/userSlice";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Button from "../../../components/Button";
 import { postLogin } from "../../../api/user/user";
@@ -27,57 +31,67 @@ const LoginScreen = () => {
   const [password, setPassword] = useState("");
 
   return (
-    <View
-      style={[
-        styles.container,
-        { paddingTop: inset.top, backgroundColor: "white", },
-      ]}
-    >
+    <View style={[styles.container, { paddingTop: inset.top }]}>
       <View style={{ alignItems: "center" }}>
         <Image
           source={require("../../../assets/logoAppLogin.png")}
-          style={{ width: width, height: 50 }}
+          style={{ width: width, height: width / 2 }}
           resizeMode="contain"
         />
       </View>
-      <View style={{ paddingHorizontal: 16 }}>
-        <TextInput
-          placeholder="Email"
-          onChangeText={(text) => setEmail(text)}
-        />
-        <TextInput
-          placeholder="Password"
-          onChangeText={(text) => setPassword(text)}
-          secureTextEntry={true} />
+      <View
+        style={{
+          paddingHorizontal: 16,
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <View style={{ width: "100%", justifyContent: "space-evenly" }}>
+          <TextInput
+            placeholder="Email"
+            onChangeText={(text) => setEmail(text)}
+          />
+          <View style={{ height: 20 }} />
+          <TextInput
+            placeholder="Password"
+            onChangeText={(text) => setPassword(text)}
+            secureTextEntry={true}
+          />
 
-        <Button
-          onPress={async () => {
-            await dispatch(
-              postLogin({
-                Email: email,
-                Password: password,
-                RememberMe: false,
-                type: "candidatelogin",
-              })
-            ).unwrap();
-            dispatch(setLoginStatus(true));
-          }}
-          title="Đăng Nhập"
-        />
-        <TouchableOpacity
-          onPress={() => {
-            Alert.alert("Thông báo", "Vui lòng đăng kí trên web");
-          }}
-        >
-          <Text
-            style={{
-              textAlign: "center",
-              fontFamily: FontFamily.SoDoSansSemiBold,
+          <Button
+            onPress={async () => {
+              dispatch(startLoading());
+              await dispatch(
+                postLogin({
+                  Email: email,
+                  Password: password,
+                  RememberMe: false,
+                  type: "candidatelogin",
+                })
+              ).unwrap();
+              dispatch(endLoading());
+
+              dispatch(setLoginStatus(true));
+            }}
+            title="Đăng Nhập"
+          />
+          <TouchableOpacity
+            onPress={() => {
+              Alert.alert("Thông báo", "Vui lòng đăng kí trên web");
             }}
           >
-            Đăng kí
-          </Text>
-        </TouchableOpacity>
+            <Text
+              style={{
+                textAlign: "center",
+                fontFamily: FontFamily.SoDoSansSemiBold,
+                fontSize: 15,
+                marginVertical: 20,
+              }}
+            >
+              Đăng kí
+            </Text>
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
   );
