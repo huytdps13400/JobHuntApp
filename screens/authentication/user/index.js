@@ -2,16 +2,32 @@ import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 import React from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { FontFamily, Icon } from "../../../assets";
-import { useDispatch } from "react-redux";
-import { setLoginStatus } from "../../../store/slices/user/userSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { endLoading, setLoginStatus, startLoading } from "../../../store/slices/user/userSlice";
+import { useEffect } from "react";
+import { getProfileAccount } from "../../../api/user/user";
+import { get } from "lodash";
+import { baseURL } from "../../../apiServer";
 
 const UserScreen = () => {
   const inset = useSafeAreaInsets();
   const dispatch = useDispatch();
+  const { userId, profile } = useSelector(state => state.user)
+  const onGetProfile = async () => {
+    dispatch(startLoading());
+    await dispatch(getProfileAccount({ userId })).unwrap();
+    dispatch(endLoading());
+
+  }
+  useEffect(() => {
+    onGetProfile()
+  }, []);
+  const CPAvatar = get(profile, "CPAvatar", "");
+
   return (
     <View style={[styles.container, { paddingTop: inset.top }]}>
-      <View style={{ alignSelf: "center" }}>
-        <Image style={styles.imageView} source={Icon.profile} />
+      <View style={{ alignItems: 'center', justifyContent: 'center' }}>
+        <Image style={styles.imageView} source={{ uri: baseURL + CPAvatar }} />
         <Text
           style={{
             fontFamily: FontFamily.SoDoSansSemiBold,
@@ -19,7 +35,7 @@ const UserScreen = () => {
             marginTop: 10,
           }}
         >
-          User Name
+          {profile.CddFullName || 'User Name'}
         </Text>
       </View>
       <TouchableOpacity
