@@ -11,10 +11,18 @@ import {
   View,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { FontFamily, Icon } from "../../../assets";
+import {
+  StatusBar,
+  setStatusBarBackgroundColor,
+  setStatusBarStyle,
+} from "expo-status-bar";
+import { useIsFocused } from "@react-navigation/native";
+import { useCallback } from "react";
+import { debounce, get } from "lodash";
 import { useDispatch, useSelector } from "react-redux";
 import { getSearchJobByKeyWord } from "../../../api/user/user";
-import { FontFamily, Icon } from "../../../assets";
-import { routeNames } from "../../../navigation/routeNames";
+import { useState } from "react";
 
 const HomeScreen = () => {
   const inset = useSafeAreaInsets();
@@ -22,22 +30,31 @@ const HomeScreen = () => {
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const { listJob } = useSelector((state) => state.user);
-
-  const onHandleSearch = useCallback((text) => {
-    debounce(() => {
-      dispatch(getSearchJobByKeyWord({ keyWord: text })).unwrap();
-    }, 500);
-  }, []);
-
-  const renderHeader = () => {
+  const [keyword, setKeyword] = useState("");
+  useEffect(() => {
+    if (!isFocused) {
+      setStatusBarBackgroundColor("white", true);
+      setStatusBarStyle("dark");
+    }
+  }, [isFocused]);
+  const onHandleSearch = async (text) => {
+    await dispatch(getSearchJobByKeyWord({ keyWord: text })).unwrap();
+  };
+  const renderHeader = useCallback(() => {
     return (
       <View style={styles.boxHeader}>
         <TextInput
           placeholder="Nhập từ khoá tìm kiếm..."
           style={styles.textInputStyle}
-          onChangeText={(text) => onHandleSearch(text)}
+          onChangeText={(text) => {
+            setKeyword(text);
+          }}
         />
-        <TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => {
+            onHandleSearch(keyword);
+          }}
+        >
           <Image
             source={Icon.search}
             style={styles.iconSearch}
@@ -46,8 +63,8 @@ const HomeScreen = () => {
         </TouchableOpacity>
       </View>
     );
-  };
-  const renderItem = () => {
+  }, []);
+  const renderItem = (item, index) => {
     return (
       <TouchableOpacity
         style={styles.itemContainer}
@@ -126,7 +143,7 @@ const HomeScreen = () => {
                 flex: 1,
               }}
             >
-              Trên 25 triệu
+              {/* {get(item,)} */}
             </Text>
           </View>
           <View
