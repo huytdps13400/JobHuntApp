@@ -7,7 +7,7 @@ import User from "../screens/authentication/user";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useDispatch } from "react-redux";
 import { getSearchJobByKeyWord } from "../api/user/user";
-import { setKeyWord } from "../store/slices/user/userSlice";
+import { endLoading, setKeyWord, startLoading } from "../store/slices/user/userSlice";
 
 const Stack = createNativeStackNavigator();
 
@@ -57,7 +57,11 @@ export default function () {
   const dispatch = useDispatch();
 
   const onHandleSearch = async (text) => {
+    dispatch(startLoading());
+
     await dispatch(getSearchJobByKeyWord({ keyWord: text })).unwrap();
+    dispatch(endLoading());
+
   };
   return (
     <Tab.Navigator
