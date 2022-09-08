@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native";
+import { Alert, StyleSheet } from "react-native";
 
 import Axios from "axios";
 import { useDispatch } from "react-redux";
@@ -17,7 +17,7 @@ export const handleParameter = (props, method) => {
     baseUrl,
   };
 };
-export const baseURL = 'https://65c0-1-52-231-193.ngrok.io';
+export const baseURL = 'https://4192-1-52-231-193.ngrok.io';
 // base
 function Request(config) {
   console.log("endpoint: nè", `${"http://localhost/8080/"}${config.url}`);
@@ -32,7 +32,18 @@ function Request(config) {
   return new Promise((rs, rj) => {
     AxiosInstance.request(StyleSheet.flatten([defaultConfig, config]))
       .then((res) => {
-        return rs(res.data);
+        console.log(res.config)
+        if (res.config.url == 'Account/Login') {
+          if (res.data.isSuccess) {
+            return rs(res.data);
+          }
+          Alert.alert('Error', res.data.message)
+          return rj(' Network error');
+        } else {
+          return rs(res.data);
+        }
+
+
       })
       .catch((error) => {
         let err;
@@ -43,7 +54,7 @@ function Request(config) {
         // }
         console.log({ err: error.response });
 
-        rj(err);
+
       });
   });
 }

@@ -89,7 +89,9 @@ const HomeScreen = () => {
     return (
       <TouchableOpacity
         style={styles.itemContainer}
-        onPress={() => navigation.navigate(routeNames.jobDetailScreen)}
+        onPress={() => navigation.navigate(routeNames.jobDetailScreen, {
+          jobId: item.RecruitJobId
+        })}
       >
         <Image
           style={{ width: 56, height: 56, borderRadius: 4 }}
