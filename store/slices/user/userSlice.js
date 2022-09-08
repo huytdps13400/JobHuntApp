@@ -1,5 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { getSearchJobByKeyWord, postLogin } from "../../../api/user/user";
+import {
+  getJobDetail,
+  getProfileAccount,
+  getSearchJobByKeyWord,
+  postLogin,
+} from "../../../api/user/user";
 
 const initialAppState = {
   isLoggedIn: false,
@@ -8,6 +13,8 @@ const initialAppState = {
   KeywordJob: "",
   userId: "",
   loadingApp: false,
+  jobDetail: {},
+  profile: {},
 };
 
 const userSlice = createSlice({
@@ -39,6 +46,12 @@ const userSlice = createSlice({
     builder.addCase(postLogin.fulfilled, (state, action) => {
       state.userId = action.payload.userId || "";
       state.loadingApp = false;
+    });
+    builder.addCase(getJobDetail.fulfilled, (state, action) => {
+      state.jobDetail = action.payload || {};
+    });
+    builder.addCase(getProfileAccount.fulfilled, (state, action) => {
+      state.profile = action.payload || {};
     });
     // App initial
   },

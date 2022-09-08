@@ -1,4 +1,9 @@
-import { postLoginUrl, getSearchJobByKeyWordUrl } from "../endpoints/user";
+import {
+  postLoginUrl,
+  getSearchJobByKeyWordUrl,
+  getJobDetailUrl,
+  getProfileUrl,
+} from "../endpoints/user";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { NetWorkService } from "../../apiServer";
 
@@ -22,6 +27,32 @@ export const getSearchJobByKeyWord = createAsyncThunk(
     });
     // handle after called successfully
     console.log("getSearchJobByKeyWord", response);
+    return response;
+  }
+);
+
+export const getJobDetail = createAsyncThunk(
+  "user/getJobDetail",
+  async (fields) => {
+    const response = await NetWorkService.Get({
+      url: `${getJobDetailUrl}/${fields.jobId}`,
+      params: fields,
+    });
+    // handle after called successfully
+    console.log("getJobDetail", response);
+    return response;
+  }
+);
+
+export const getProfileAccount = createAsyncThunk(
+  "user/getProfileUrl",
+  async (fields) => {
+    const response = await NetWorkService.Get({
+      url: getProfileUrl,
+      params: fields,
+    });
+    // handle after called successfully
+    console.log("getProfileUrl", response);
     return response;
   }
 );
