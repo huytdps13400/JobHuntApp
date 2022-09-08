@@ -63,7 +63,11 @@ export default function () {
           headerShown: false,
           tabBarLabel: "Trang chủ",
           tabBarIcon: ({ color, focused }) => (
-            <MaterialIcons name={"home"} size={24} color={color} />
+            <MaterialIcons
+              name={"home"}
+              size={24}
+              color={focused ? "#1D438A" : color}
+            />
           ),
           tabBarLabelStyle: {
             fontFamily: "SoDoSans-SemiBold",
@@ -78,7 +82,11 @@ export default function () {
           headerShown: false,
           tabBarLabel: "Cá nhân",
           tabBarIcon: ({ color, focused }) => (
-            <MaterialIcons name={"person"} size={24} color={color} />
+            <MaterialIcons
+              name={"person"}
+              size={24}
+              color={focused ? "#1D438A" : color}
+            />
           ),
           tabBarLabelStyle: {
             fontFamily: "SoDoSans-SemiBold",

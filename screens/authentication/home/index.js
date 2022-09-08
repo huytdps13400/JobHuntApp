@@ -1,57 +1,45 @@
+import { useIsFocused, useNavigation } from "@react-navigation/native";
+import React, { useCallback, useState } from "react";
 import {
-  View,
-  Text,
-  StyleSheet,
   FlatList,
-  TextInput,
   Image,
+  StyleSheet,
+  Text,
+  TextInput,
   TouchableOpacity,
+  View,
 } from "react-native";
-import React, { useEffect } from "react";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { FontFamily, Icon } from "../../../assets";
-import {
-  StatusBar,
-  setStatusBarBackgroundColor,
-  setStatusBarStyle,
-} from "expo-status-bar";
-import { useIsFocused } from "@react-navigation/native";
-import { useCallback } from "react";
-import { debounce, get } from "lodash";
 import { useDispatch, useSelector } from "react-redux";
 import { getSearchJobByKeyWord } from "../../../api/user/user";
-import { useState } from "react";
+import { FontFamily, Icon } from "../../../assets";
 
 const HomeScreen = () => {
   const inset = useSafeAreaInsets();
   const isFocused = useIsFocused();
   const dispatch = useDispatch();
+  const navigation = useNavigation();
   const { listJob } = useSelector((state) => state.user);
-  const [keyword, setKeyword] = useState('')
-  useEffect(() => {
-    if (!isFocused) {
-      setStatusBarBackgroundColor("white", true);
-      setStatusBarStyle("dark");
-    }
-  }, [isFocused]);
+  const [keyword, setKeyword] = useState("");
+
   const onHandleSearch = async (text) => {
-
     await dispatch(getSearchJobByKeyWord({ keyWord: text })).unwrap();
-
   };
   const renderHeader = useCallback(() => {
     return (
       <View style={styles.boxHeader}>
         <TextInput
-          placeholder="Enter KeyWord Title"
+          placeholder="Nhập từ khoá tìm kiếm..."
           style={styles.textInputStyle}
           onChangeText={(text) => {
             setKeyword(text);
           }}
         />
-        <TouchableOpacity onPress={() => {
-          onHandleSearch(keyword);
-        }}>
+        <TouchableOpacity
+          onPress={() => {
+            onHandleSearch(keyword);
+          }}
+        >
           <Image
             source={Icon.search}
             style={styles.iconSearch}
@@ -63,7 +51,10 @@ const HomeScreen = () => {
   }, []);
   const renderItem = (item, index) => {
     return (
-      <TouchableOpacity style={styles.itemContainer}>
+      <TouchableOpacity
+        style={styles.itemContainer}
+        onPress={() => navigation.navigate(routeNames.jobDetailScreen)}
+      >
         <Image
           style={{ width: 56, height: 56, borderRadius: 4 }}
           source={{
@@ -173,21 +164,48 @@ const HomeScreen = () => {
   const renderFooter = () => {
     return <View style={{ width: 10, height: 10 }} />;
   };
+
+  const renderEmpty = () => {
+    return (
+      <View
+        style={{
+          alignItems: "center",
+          justifyContent: "center",
+          width: "100%",
+          height: "100%",
+          flex: 1,
+        }}
+      >
+        <Image
+          source={Icon.jobSearch}
+          style={{
+            width: 100,
+            height: 100,
+          }}
+        />
+        <Text
+          style={{
+            fontFamily: FontFamily.SoDoSansRegular,
+            fontSize: 14,
+            marginTop: 10,
+          }}
+        >
+          Danh sách rỗng.
+        </Text>
+      </View>
+    );
+  };
   return (
     <View style={[styles.container, { paddingTop: inset.top }]}>
-      <StatusBar
-        backgroundColor={isFocused ? "#1D438A" : "white"}
-        translucent={true}
-        animated
-        style="light"
-      />
       <FlatList
+        contentContainerStyle={{ flexGrow: 1 }}
         ListHeaderComponent={renderHeader}
         data={listJob || []}
         renderItem={renderItem}
         style={{ backgroundColor: "white" }}
         keyExtractor={(item, index) => index.toString()}
         ListFooterComponent={renderFooter}
+        ListEmptyComponent={renderEmpty}
       />
     </View>
   );

@@ -6,6 +6,7 @@ import {
   Image,
   Dimensions,
   TextInput,
+  Alert,
 } from "react-native";
 import React, { useRef, useState } from "react";
 import { useDispatch } from "react-redux";
@@ -15,6 +16,7 @@ import Button from "../../../components/Button";
 import { postLogin } from "../../../api/user/user";
 // import TextInput from "../../../components/TextInput";
 import Constants from "expo-constants";
+import { FontFamily } from "../../../assets";
 
 const width = Dimensions.get("window").width;
 
@@ -62,6 +64,20 @@ const LoginScreen = () => {
           }}
           title="Đăng Nhập"
         />
+        <TouchableOpacity
+          onPress={() => {
+            Alert.alert("Thông báo", "Vui lòng đăng kí trên web");
+          }}
+        >
+          <Text
+            style={{
+              textAlign: "center",
+              fontFamily: FontFamily.SoDoSansSemiBold,
+            }}
+          >
+            Đăng kí
+          </Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
