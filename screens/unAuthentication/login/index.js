@@ -30,7 +30,7 @@ const LoginScreen = () => {
     <View
       style={[
         styles.container,
-        { paddingTop: inset.top, backgroundColor: "white" },
+        { paddingTop: inset.top, backgroundColor: "white", },
       ]}
     >
       <View style={{ alignItems: "center" }}>
@@ -48,7 +48,7 @@ const LoginScreen = () => {
         <TextInput
           placeholder="Password"
           onChangeText={(text) => setPassword(text)}
-        />
+          secureTextEntry={true} />
 
         <Button
           onPress={async () => {

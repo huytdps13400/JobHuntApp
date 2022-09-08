@@ -5,6 +5,7 @@ const initialAppState = {
   isLoggedIn: false,
   listJob: [],
   loadingListJob: false,
+  KeywordJob: ''
 };
 
 const userSlice = createSlice({
@@ -15,6 +16,9 @@ const userSlice = createSlice({
       console.log({ loginStatusSet: action.payload });
       state.isLoggedIn = action.payload;
     },
+    setKeyWord: (state, action) => {
+      state.KeywordJob = action.payload
+    }
   },
   extraReducers: (builder) => {
     builder.addCase(getSearchJobByKeyWord.fulfilled, (state, action) => {
@@ -25,5 +29,5 @@ const userSlice = createSlice({
   },
 });
 export const { reducer: userReducer } = userSlice;
-export const { setLoginStatus } = userSlice.actions;
+export const { setLoginStatus, setKeyWord } = userSlice.actions;
 export default userReducer;

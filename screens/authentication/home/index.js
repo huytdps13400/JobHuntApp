@@ -1,5 +1,7 @@
 import { useIsFocused, useNavigation } from "@react-navigation/native";
-import React, { useCallback, useState } from "react";
+import { get, values } from "lodash";
+import moment from "moment/moment";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import {
   FlatList,
   Image,
@@ -12,44 +14,70 @@ import {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
 import { getSearchJobByKeyWord } from "../../../api/user/user";
+import { baseURL } from "../../../apiServer";
 import { FontFamily, Icon } from "../../../assets";
+import { routeNames } from "../../../navigation/routeNames";
+import { setKeyWord } from "../../../store/slices/user/userSlice";
 
 const HomeScreen = () => {
   const inset = useSafeAreaInsets();
   const isFocused = useIsFocused();
   const dispatch = useDispatch();
+
   const navigation = useNavigation();
-  const { listJob } = useSelector((state) => state.user);
-  const [keyword, setKeyword] = useState("");
+  const { listJob, KeywordJob } = useSelector((state) => state.user);
+  const [keyword, setKeyword] = useState(KeywordJob);
 
   const onHandleSearch = async (text) => {
     await dispatch(getSearchJobByKeyWord({ keyWord: text })).unwrap();
   };
-  const renderHeader = useCallback(() => {
-    return (
-      <View style={styles.boxHeader}>
-        <TextInput
-          placeholder="Nhập từ khoá tìm kiếm..."
-          style={styles.textInputStyle}
-          onChangeText={(text) => {
-            setKeyword(text);
-          }}
-        />
-        <TouchableOpacity
-          onPress={() => {
-            onHandleSearch(keyword);
-          }}
-        >
-          <Image
-            source={Icon.search}
-            style={styles.iconSearch}
-            resizeMode="contain"
-          />
-        </TouchableOpacity>
-      </View>
-    );
+
+  useEffect(() => {
+    onHandleSearch('')
   }, []);
-  const renderItem = (item, index) => {
+  console.log('kaka',)
+  useEffect(() => {
+    setKeyword(KeywordJob)
+  }, [KeywordJob])
+  const renderHeader = useMemo(() => {
+    return (
+      <>
+        <View style={styles.boxHeader}>
+          <TextInput
+            placeholder="Nhập từ khoá tìm kiếm..."
+            style={styles.textInputStyle}
+            onChangeText={(text) => { setKeyword(text); dispatch(setKeyWord(text)) }}
+            value={KeywordJob || ''}
+
+          />
+          <TouchableOpacity
+            onPress={() => {
+              setTimeout(() => {
+                onHandleSearch(KeywordJob);
+
+              }, 300)
+              console.log({ keyword })
+            }}
+          >
+            <Image
+              source={Icon.search}
+              style={styles.iconSearch}
+              resizeMode="contain"
+            />
+          </TouchableOpacity>
+        </View>
+      </>
+    );
+  }, [setKeyword, keyword]);
+  const renderItem = ({ item, index }) => {
+    const SalaryDTO = get(item, 'SalaryDTO', {});
+    const RJTitle = get(item, 'RJTitle', '');
+    const RJNameContact = get(item, 'RJNameContact', '');
+    const RJ_WorkPlace = get(item, 'RJ_WorkPlace', '');
+    const RJExpirationDate = get(item, 'RJExpirationDate', '');
+    const RecruitDTO = get(item, 'RecruitDTO', {});
+    const RILogo = get(RecruitDTO, 'RILogo', '')
+
     return (
       <TouchableOpacity
         style={styles.itemContainer}
@@ -58,7 +86,7 @@ const HomeScreen = () => {
         <Image
           style={{ width: 56, height: 56, borderRadius: 4 }}
           source={{
-            uri: "https://cdn.tgdd.vn/2020/04/GameApp/unnamed-200x200-18.png",
+            uri: baseURL + RILogo,
           }}
         />
         <View style={{ marginLeft: 10, flex: 1 }}>
@@ -69,7 +97,7 @@ const HomeScreen = () => {
               marginBottom: 5,
             }}
           >
-            IT
+            {RJTitle}
           </Text>
           <Text
             style={{
@@ -79,7 +107,7 @@ const HomeScreen = () => {
               marginBottom: 5,
             }}
           >
-            Ngân Hàng Á Châu
+            {RJNameContact}
           </Text>
           <View
             style={{
@@ -103,7 +131,7 @@ const HomeScreen = () => {
                 flex: 1,
               }}
             >
-              Phường 25 - Quận Bình Thạnh - HCM
+              {RJ_WorkPlace}
             </Text>
           </View>
           <View
@@ -128,7 +156,7 @@ const HomeScreen = () => {
                 flex: 1,
               }}
             >
-              {/* {get(item,)} */}
+              {get(SalaryDTO, 'SShow', '')}
             </Text>
           </View>
           <View
@@ -153,7 +181,7 @@ const HomeScreen = () => {
                 flex: 1,
               }}
             >
-              Hết hạn:30/08/2002
+              Hết hạn:{moment(RJExpirationDate).format('DD/MM/YYYY')}
             </Text>
           </View>
         </View>
@@ -206,6 +234,7 @@ const HomeScreen = () => {
         keyExtractor={(item, index) => index.toString()}
         ListFooterComponent={renderFooter}
         ListEmptyComponent={renderEmpty}
+        extraData={listJob}
       />
     </View>
   );

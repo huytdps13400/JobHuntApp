@@ -5,6 +5,9 @@ import * as React from "react";
 import Home from "../screens/authentication/home";
 import User from "../screens/authentication/user";
 import { MaterialIcons } from "@expo/vector-icons";
+import { useDispatch } from "react-redux";
+import { getSearchJobByKeyWord } from "../api/user/user";
+import { setKeyWord } from "../store/slices/user/userSlice";
 
 const Stack = createNativeStackNavigator();
 
@@ -51,6 +54,11 @@ const tabScreens = () => {
 
 export default function () {
   const dataTabScreens = tabScreens();
+  const dispatch = useDispatch();
+
+  const onHandleSearch = async (text) => {
+    await dispatch(getSearchJobByKeyWord({ keyWord: text })).unwrap();
+  };
   return (
     <Tab.Navigator
       defaultScreenOptions={{ tabBarStyle: { display: "none" } }}
@@ -59,7 +67,14 @@ export default function () {
       <Tab.Screen
         name={routeNames.homeScreen}
         component={Home}
+        listeners={{
+          tabPress: () => {
+            onHandleSearch('');
+            dispatch(setKeyWord(''))
+          }
+        }}
         options={{
+
           headerShown: false,
           tabBarLabel: "Trang chủ",
           tabBarIcon: ({ color, focused }) => (
