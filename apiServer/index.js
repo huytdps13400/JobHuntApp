@@ -17,7 +17,7 @@ export const handleParameter = (props, method) => {
     baseUrl,
   };
 };
-export const baseURL = 'https://4192-1-52-231-193.ngrok.io';
+export const baseURL = 'https://9321-183-81-45-75.ngrok.io';
 // base
 function Request(config) {
   console.log("endpoint: nè", `${"http://localhost/8080/"}${config.url}`);
