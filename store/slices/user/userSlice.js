@@ -1,10 +1,11 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import {
   getJobDetail,
   getProfileAccount,
   getSearchJobByKeyWord,
   postLogin,
 } from "../../../api/user/user";
+import { persistUser, rehydrateUser } from "./ persits";
 
 const initialAppState = {
   isLoggedIn: false,
@@ -16,6 +17,18 @@ const initialAppState = {
   jobDetail: {},
   profile: {},
 };
+
+export const getAppUser = createAsyncThunk(
+  "app/getUser",
+  async (_params, { rejectWithValue, dispatch }) => {
+    const appUser = await rehydrateUser();
+    if (appUser) {
+      dispatch(onLoadLogin(appUser));
+      dispatch(setLoginStatus(true));
+    }
+    return rejectWithValue({});
+  }
+);
 
 const userSlice = createSlice({
   name: "user",
@@ -33,6 +46,10 @@ const userSlice = createSlice({
     },
     endLoading: (state, action) => {
       state.loadingApp = false;
+    },
+    onLoadLogin: (state, action) => {
+      state.userId = action.payload;
+      persistUser(action.payload);
     },
   },
   extraReducers: (builder) => {
@@ -57,6 +74,11 @@ const userSlice = createSlice({
   },
 });
 export const { reducer: userReducer } = userSlice;
-export const { setLoginStatus, setKeyWord, startLoading, endLoading } =
-  userSlice.actions;
+export const {
+  setLoginStatus,
+  setKeyWord,
+  startLoading,
+  endLoading,
+  onLoadLogin,
+} = userSlice.actions;
 export default userReducer;
