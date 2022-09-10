@@ -62,6 +62,8 @@ const userSlice = createSlice({
     });
     builder.addCase(postLogin.fulfilled, (state, action) => {
       state.userId = action.payload.userId || "";
+      persistUser(action.payload.userId);
+
       state.loadingApp = false;
     });
     builder.addCase(getJobDetail.fulfilled, (state, action) => {

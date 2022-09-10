@@ -3,6 +3,7 @@ import { Alert, StyleSheet } from "react-native";
 import Axios from "axios";
 import { useDispatch } from "react-redux";
 import { endLoading } from "../store/slices/user/userSlice";
+import { postCvUrl } from "../api/endpoints/user";
 
 const AxiosInstance = Axios.create({});
 
@@ -17,7 +18,7 @@ export const handleParameter = (props, method) => {
     baseUrl,
   };
 };
-export const baseURL = 'https://9321-183-81-45-75.ngrok.io';
+export const baseURL = 'https://d0f0-183-81-45-75.ngrok.io';
 // base
 function Request(config) {
   console.log("endpoint: nè", `${"http://localhost/8080/"}${config.url}`);
@@ -39,6 +40,15 @@ function Request(config) {
           }
           Alert.alert('Error', res.data.message)
           return rj(' Network error');
+        } else if (res.config.url == postCvUrl) {
+          if (res.data.status === 'success') {
+            Alert.alert('Thông báo', res.data.message)
+            rs(res.data);
+          } else {
+            Alert.alert('Thông báo', res.data.message)
+            rj(res.data.message);
+
+          }
         } else {
           return rs(res.data);
         }

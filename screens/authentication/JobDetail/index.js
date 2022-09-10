@@ -2,6 +2,7 @@ import { useIsFocused, useNavigation, useRoute } from "@react-navigation/native"
 import { get } from "lodash";
 import moment from "moment";
 import React, { useEffect } from "react";
+import { useState } from "react";
 import {
   Dimensions,
   Image,
@@ -15,11 +16,12 @@ import {
 import RenderHTML from "react-native-render-html";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useDispatch, useSelector } from "react-redux";
-import { getJobDetail } from "../../../api/user/user";
+import { getJobDetail, getProfileAccount, postProfileCv } from "../../../api/user/user";
 import { baseURL } from "../../../apiServer";
 import { FontFamily, Icon } from "../../../assets";
 import Button from "../../../components/Button";
 import { endLoading, startLoading } from "../../../store/slices/user/userSlice";
+import ModalConfirmCv from "./ModalConfirmCV";
 
 export const width = Dimensions.get("window").width;
 export const height = Dimensions.get("window").height;
@@ -30,10 +32,11 @@ const JobDetail = () => {
   const navigation = useNavigation();
   const route = useRoute();
   const { width } = useWindowDimensions();
+  const [isShowAlert, setIsShowAlert] = useState(false);
 
   const RecruitJobId = route.params?.jobId || 1
   console.log({ alo: route.params })
-  const { jobDetail } = useSelector(state => state.user)
+  const { jobDetail, userId, profile } = useSelector(state => state.user)
   const dispatch = useDispatch();
 
   const getJobDetailHandle = async () => {
@@ -43,9 +46,26 @@ const JobDetail = () => {
     dispatch(endLoading());
 
   }
+  const onPostCv = async () => {
+    dispatch(startLoading());
+
+    await dispatch(postProfileCv({
+      UserID: userId,
+      JobID: RecruitJobId,
+      PhoneUser: profile?.AspNetUserDTO?.PhoneNumber,
+      CVOld: userId + 1,
+      Base64Content: profile?.CddPathCV,
+      FileName: profile?.nameFileCV
+    }));
+    dispatch(endLoading());
+
+
+  }
   useEffect(() => {
     if (isFocused) {
       getJobDetailHandle();
+      dispatch(getProfileAccount({ userId })).unwrap();
+
     }
   }, [isFocused])
   const SalaryDTO = get(jobDetail, "SalaryDTO", {});
@@ -211,7 +231,7 @@ const JobDetail = () => {
             </Text>
           </View>
           <Text style={{
-            fontSize: 15,
+            fontSize: 18,
             fontFamily: FontFamily.SoDoSansSemiBold,
             flex: 1,
             borderBottomWidth: 1,
@@ -221,22 +241,25 @@ const JobDetail = () => {
           <RenderHTML source={{ html: RJ_Describe }} contentWidth={width}
           />
           <Text style={{
-            fontSize: 15,
+            fontSize: 18,
             fontFamily: FontFamily.SoDoSansSemiBold,
             flex: 1,
             borderBottomWidth: 1,
             paddingBottom: 10
           }}>Yêu cầu</Text>
           <RenderHTML source={{ html: RJ_Require }} contentWidth={width}
+
           />
           <Text style={{
-            fontSize: 15,
+            fontSize: 18,
             fontFamily: FontFamily.SoDoSansSemiBold,
             flex: 1,
             borderBottomWidth: 1,
             paddingBottom: 10
           }}>Quyền Lợi</Text>
           <RenderHTML source={{ html: RJBenefit }} contentWidth={width}
+
+
           />
           <View style={{ height: 50 }} />
 
@@ -257,9 +280,10 @@ const JobDetail = () => {
             backgroundColor: "#1D438A",
             width: "100%",
           }}
-          onPress={() => { }}
+          onPress={() => { setIsShowAlert(true) }}
         />
       </View>
+      <ModalConfirmCv onSuccess={onPostCv} isShowAlert={isShowAlert} jobDetail={jobDetail} onClose={() => setIsShowAlert(false)} />
     </View>
   );
 };

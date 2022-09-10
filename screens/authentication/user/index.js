@@ -8,6 +8,7 @@ import { useEffect } from "react";
 import { getProfileAccount } from "../../../api/user/user";
 import { get } from "lodash";
 import { baseURL } from "../../../apiServer";
+import { clearProfileFromPersist } from "../../../store/slices/user/ persits";
 
 const UserScreen = () => {
   const inset = useSafeAreaInsets();
@@ -75,7 +76,10 @@ const UserScreen = () => {
           marginVertical: 20,
           marginHorizontal: 16,
         }}
-        onPress={() => dispatch(setLoginStatus(false))}
+        onPress={() => {
+          dispatch(setLoginStatus(false));
+          clearProfileFromPersist()
+        }}
       >
         <Text style={{ fontFamily: FontFamily.SoDoSansRegular, fontSize: 14 }}>
           Đăng xuất

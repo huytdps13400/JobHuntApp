@@ -15,3 +15,7 @@ export const rehydrateUser = async () => {
   }
   return "";
 };
+
+export const clearProfileFromPersist = () => {
+  AsyncStorage.removeItem(User);
+}

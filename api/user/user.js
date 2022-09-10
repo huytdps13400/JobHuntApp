@@ -3,6 +3,7 @@ import {
   getSearchJobByKeyWordUrl,
   getJobDetailUrl,
   getProfileUrl,
+  postCvUrl,
 } from "../endpoints/user";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { NetWorkService } from "../../apiServer";
@@ -53,6 +54,19 @@ export const getProfileAccount = createAsyncThunk(
     });
     // handle after called successfully
     console.log("getProfileUrl", response);
+    return response;
+  }
+);
+
+export const postProfileCv = createAsyncThunk(
+  "user/postProfileCv",
+  async (fields) => {
+    const response = await NetWorkService.Post({
+      url: postCvUrl,
+      body: fields,
+    });
+    // handle after called successfully
+    console.log("postProfileCv", response);
     return response;
   }
 );
