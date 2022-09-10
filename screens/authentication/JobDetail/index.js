@@ -4,6 +4,7 @@ import moment from "moment";
 import React, { useEffect } from "react";
 import { useState } from "react";
 import {
+  Alert,
   Dimensions,
   Image,
   ScrollView,
@@ -81,6 +82,10 @@ const JobDetail = () => {
 
   const RecruitDTO = get(jobDetail, "RecruitDTO", {});
   const RILogo = get(RecruitDTO, "RICoverImage", "https://s3.cloud.cmctelecom.vn/tinhte2/2019/06/4677494_default-placeholder.png");
+
+  const nameFileCV = get(profile, "nameFileCV", "");
+
+
   return (
     <View style={[styles.container, { paddingTop: inset.top }]}>
       <View
@@ -280,7 +285,13 @@ const JobDetail = () => {
             backgroundColor: "#1D438A",
             width: "100%",
           }}
-          onPress={() => { setIsShowAlert(true) }}
+          onPress={() => {
+            if (nameFileCV !== null) {
+              return setIsShowAlert(true)
+            }
+            Alert.alert('Thông báo', 'Vui lòng truy cập website để upload CV')
+          }
+          }
         />
       </View>
       <ModalConfirmCv onSuccess={onPostCv} isShowAlert={isShowAlert} jobDetail={jobDetail} onClose={() => setIsShowAlert(false)} />
