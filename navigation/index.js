@@ -9,6 +9,7 @@ import LoginScreen from "../screens/unAuthentication/login";
 import { useSelector } from "react-redux";
 import JobDetail from "../screens/authentication/JobDetail";
 import Loader from "../components/Loading";
+import InfoProfile from "../screens/authentication/InfoProfile";
 
 const Stack = createNativeStackNavigator();
 
@@ -26,6 +27,11 @@ function RootNavigator() {
           <Stack.Screen
             name={routeNames.jobDetailScreen}
             component={JobDetail}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name={routeNames.InfoProfileScreen}
+            component={InfoProfile}
             options={{ headerShown: false }}
           />
         </>

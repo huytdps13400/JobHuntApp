@@ -4,4 +4,6 @@ export const routeNames = {
   userScreen: "UserScreen",
   loginScreen: "LoginScreen",
   jobDetailScreen: "jobDetailScreen",
+  InfoProfileScreen: "InfoProfileScreen",
+
 };

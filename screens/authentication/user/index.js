@@ -9,10 +9,14 @@ import { getProfileAccount } from "../../../api/user/user";
 import { get } from "lodash";
 import { baseURL } from "../../../apiServer";
 import { clearProfileFromPersist } from "../../../store/slices/user/ persits";
+import { useIsFocused, useNavigation } from "@react-navigation/native";
+import { routeNames } from "../../../navigation/routeNames";
 
 const UserScreen = () => {
   const inset = useSafeAreaInsets();
   const dispatch = useDispatch();
+  const isFocused = useIsFocused();
+  const navigation = useNavigation()
   const { userId, profile } = useSelector(state => state.user)
   const onGetProfile = async () => {
     dispatch(startLoading());
@@ -22,7 +26,7 @@ const UserScreen = () => {
   }
   useEffect(() => {
     onGetProfile()
-  }, []);
+  }, [isFocused]);
   const CPAvatar = get(profile, "CPAvatar", "");
 
   return (
@@ -55,6 +59,7 @@ const UserScreen = () => {
           marginVertical: 20,
           marginHorizontal: 16,
         }}
+        onPress={() => navigation.navigate(routeNames.InfoProfileScreen)}
       >
         <Text style={{ fontFamily: FontFamily.SoDoSansRegular, fontSize: 14 }}>
           Thông tin cá nhân
